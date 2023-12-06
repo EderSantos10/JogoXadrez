@@ -1,6 +1,5 @@
 package xadrez;
 
-import taboleirojogo.Posiçao;
 import taboleirojogo.Taboleiro;
 import xadrez.peça.Rei;
 import xadrez.peça.Torre;
@@ -23,11 +22,26 @@ public class PartidaXadrez {
 		}
 		return mat;
 	}
+	
+	private void lugarNovaPeça(char coluna, int linha, PeçaXadrez peça) {
+		taboleiro.lugarPeça(peça, new PosiçaoXadrez(coluna, linha).aPosiçao());
+		
+	}
 
 	private void setupInicial() {
-		taboleiro.lugarPeça(new Torre(taboleiro, Cor.BRANCO), new Posiçao(2, 1));
-		taboleiro.lugarPeça(new Rei(taboleiro, Cor.PRETO), new Posiçao(0, 4));
-		taboleiro.lugarPeça(new Rei(taboleiro, Cor.BRANCO), new Posiçao(7, 4));
+		lugarNovaPeça('c' , 1, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('c' , 2, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('d' , 2, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('e' , 2, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('e' , 1, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('d', 1, new Rei(taboleiro, Cor.BRANCO));
+		
+		lugarNovaPeça('c' , 7, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('c' , 8, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('d' , 7, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('e' , 7, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('e' , 8, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('d', 8, new Rei(taboleiro, Cor.PRETO));
 		
 	}
 	
