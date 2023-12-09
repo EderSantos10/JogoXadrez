@@ -1,8 +1,10 @@
 package xadrez;
 
+import taboleirojogo.Posiçao;
 import taboleirojogo.Taboleiro;
 import xadrez.peça.Rei;
 import xadrez.peça.Torre;
+import taboleirojogo.Peça;
 
 public class PartidaXadrez {
 	
@@ -13,7 +15,7 @@ public class PartidaXadrez {
 		setupInicial();
 	}
 	
-	public PeçaXadrez[][] getpeças(){
+	public PeçaXadrez[][] getPeças(){
 		PeçaXadrez[][] mat = new PeçaXadrez[taboleiro.getLinhas()][taboleiro.getColunas()];
 		for (int i=0; i<taboleiro.getLinhas(); i++) {
 			for (int j=0; j<taboleiro.getColunas(); j++) {
@@ -22,7 +24,28 @@ public class PartidaXadrez {
 		}
 		return mat;
 	}
+		
+	public PeçaXadrez performaceMovimentoXadrez(PosiçaoXadrez inicialPosiçao, PosiçaoXadrez destinoPosiçao) {
+		Posiçao inicial = inicialPosiçao.aPosiçao();
+		Posiçao destino = destinoPosiçao.aPosiçao();
+		validaçaoInicialPosiçao(inicial);
+		Peça capturadaPeça = fazerMovimento(inicial, destino);
+		return (PeçaXadrez)capturadaPeça;
+	}
 	
+	private Peça fazerMovimento(Posiçao inicial, Posiçao destino) {
+		Peça p = taboleiro.removePeça(inicial);
+		Peça capturadaPeça = taboleiro.removePeça(destino);
+		taboleiro.lugarPeça(p, destino);
+		return capturadaPeça;
+	}
+	
+	private void validaçaoInicialPosiçao(Posiçao posiçao) {
+		if(!taboleiro.haUmaPeça(posiçao)) {
+		throw new ExceçaoXadrez("Nao existe peça na posiçao inicial");
+		}
+	}	
+
 	private void lugarNovaPeça(char coluna, int linha, PeçaXadrez peça) {
 		taboleiro.lugarPeça(peça, new PosiçaoXadrez(coluna, linha).aPosiçao());
 		
