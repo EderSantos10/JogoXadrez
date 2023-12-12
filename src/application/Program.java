@@ -28,7 +28,8 @@ public class Program {
 				System.out.print("Destino: ");
 				PosiçaoXadrez destino = UI.lerPosiçaoXadrez(sc);
 				
-				PeçaXadrez capturadaPeça = partidaXadrez.performaceMovimentoXadrez(inicial, destino);					
+				PeçaXadrez capturadaPeça = partidaXadrez.performaceMovimentoXadrez(inicial, destino);
+								
 			}
 		
 			catch (ExceçaoXadrez e) {

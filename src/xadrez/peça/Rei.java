@@ -16,4 +16,10 @@ public class Rei extends PeçaXadrez{
 		return "R";
 	}
 
+	@Override
+	public boolean[][] movimentoPossiveis() {
+		boolean [][] mat = new boolean[getTaboleiro().getLinhas()][getTaboleiro().getColunas()];
+		return mat;
+	}		
+
 }

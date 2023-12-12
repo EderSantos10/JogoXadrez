@@ -29,6 +29,7 @@ public class PartidaXadrez {
 		Posiçao inicial = inicialPosiçao.aPosiçao();
 		Posiçao destino = destinoPosiçao.aPosiçao();
 		validaçaoInicialPosiçao(inicial);
+		validaçaoPosiçaoDestino(inicial, destino);
 		Peça capturadaPeça = fazerMovimento(inicial, destino);
 		return (PeçaXadrez)capturadaPeça;
 	}
@@ -44,7 +45,16 @@ public class PartidaXadrez {
 		if(!taboleiro.haUmaPeça(posiçao)) {
 		throw new ExceçaoXadrez("Nao existe peça na posiçao inicial");
 		}
+		if(!taboleiro.peça(posiçao).aquiUmMovimentoPosivel()) {
+			throw new ExceçaoXadrez("Nao existe movimentos possiveis para esta peça");
+		}
 	}	
+	
+	private void validaçaoPosiçaoDestino(Posiçao inicial, Posiçao destino) {
+		if (!taboleiro.peça(inicial).movimentoPossivel(destino)) {
+			throw new ExceçaoXadrez("A peça escolhida nao pode mover para o destino escolhido");
+		}
+	}
 
 	private void lugarNovaPeça(char coluna, int linha, PeçaXadrez peça) {
 		taboleiro.lugarPeça(peça, new PosiçaoXadrez(coluna, linha).aPosiçao());
