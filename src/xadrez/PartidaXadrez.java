@@ -8,11 +8,23 @@ import taboleirojogo.Peça;
 
 public class PartidaXadrez {
 	
+	private int turno;
+	private Cor jogadorAtual;
 	private Taboleiro taboleiro;
 	
 	public PartidaXadrez() {
 		taboleiro = new Taboleiro(8, 8);
+		turno = 1;
+		jogadorAtual = Cor.BRANCO;
 		setupInicial();
+	}
+	
+	public int getTurno() {
+		return turno;
+	}
+	
+	public Cor getJogadorAtual() {
+		return jogadorAtual;
 	}
 	
 	public PeçaXadrez[][] getPeças(){
@@ -24,6 +36,12 @@ public class PartidaXadrez {
 		}
 		return mat;
 	}
+	
+	public boolean[][] movimentosPossiveis(PosiçaoXadrez posiçaoInicial){
+		Posiçao posiçao = posiçaoInicial.aPosiçao();
+		validaçaoInicialPosiçao(posiçao);
+		return taboleiro.peça(posiçao).movimentoPossiveis();
+	}
 		
 	public PeçaXadrez performaceMovimentoXadrez(PosiçaoXadrez inicialPosiçao, PosiçaoXadrez destinoPosiçao) {
 		Posiçao inicial = inicialPosiçao.aPosiçao();
@@ -31,6 +49,7 @@ public class PartidaXadrez {
 		validaçaoInicialPosiçao(inicial);
 		validaçaoPosiçaoDestino(inicial, destino);
 		Peça capturadaPeça = fazerMovimento(inicial, destino);
+		novoTurno();
 		return (PeçaXadrez)capturadaPeça;
 	}
 	
@@ -45,6 +64,9 @@ public class PartidaXadrez {
 		if(!taboleiro.haUmaPeça(posiçao)) {
 		throw new ExceçaoXadrez("Nao existe peça na posiçao inicial");
 		}
+		if(jogadorAtual != ((PeçaXadrez)taboleiro.peça(posiçao)).getCor()) {
+			throw new ExceçaoXadrez("Essa peça nao e sua");
+		}
 		if(!taboleiro.peça(posiçao).aquiUmMovimentoPosivel()) {
 			throw new ExceçaoXadrez("Nao existe movimentos possiveis para esta peça");
 		}
@@ -54,6 +76,11 @@ public class PartidaXadrez {
 		if (!taboleiro.peça(inicial).movimentoPossivel(destino)) {
 			throw new ExceçaoXadrez("A peça escolhida nao pode mover para o destino escolhido");
 		}
+	}
+	
+	private void novoTurno() {
+		turno++;
+		jogadorAtual = (jogadorAtual == Cor.BRANCO) ? Cor.PRETO : Cor.BRANCO;
 	}
 
 	private void lugarNovaPeça(char coluna, int linha, PeçaXadrez peça) {
