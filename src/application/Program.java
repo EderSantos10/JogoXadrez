@@ -19,7 +19,7 @@ public class Program {
 		PartidaXadrez partidaXadrez = new PartidaXadrez();
 		List <PeçaXadrez> capturada = new ArrayList<>();
 		
-		while (true) {
+		while (!partidaXadrez.getCheckMate()) {
 			try {
 				UI.limparTela();
 				UI.printPartida(partidaXadrez, capturada);
@@ -27,9 +27,9 @@ public class Program {
 				System.out.print("Inicio: ");
 				PosiçaoXadrez inicial = UI.lerPosiçaoXadrez(sc);
 				
-				boolean[][] movimentosPossiveis = partidaXadrez.movimentosPossiveis(inicial);
+				boolean[][] movimentoPossiveis = partidaXadrez.movimentosPossiveis(inicial);
 				UI.limparTela();
-				UI.printTaboleiro(partidaXadrez.getPeças(), movimentosPossiveis);
+				UI.printTaboleiro(partidaXadrez.getPeças(), movimentoPossiveis);
 				
 				System.out.println();
 				System.out.print("Destino: ");
@@ -53,6 +53,8 @@ public class Program {
 			
 			}
 		}
+		UI.limparTela();
+		UI.printPartida(partidaXadrez, capturada);
 	}
 }
 
