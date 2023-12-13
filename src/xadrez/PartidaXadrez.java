@@ -7,6 +7,7 @@ import xadrez.peça.Torre;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import taboleirojogo.Peça;
 
@@ -15,6 +16,7 @@ public class PartidaXadrez {
 	private int turno;
 	private Cor jogadorAtual;
 	private Taboleiro taboleiro;
+	private boolean check;
 	
 	private List<Peça> peçasNoTaboleiro = new ArrayList<>();
 	private List<Peça> peçasCapturadas = new ArrayList<>();
@@ -32,6 +34,10 @@ public class PartidaXadrez {
 	
 	public Cor getJogadorAtual() {
 		return jogadorAtual;
+	}
+	
+	public boolean getCheck() {
+		return check;
 	}
 	
 	public PeçaXadrez[][] getPeças(){
@@ -56,6 +62,14 @@ public class PartidaXadrez {
 		validaçaoInicialPosiçao(inicial);
 		validaçaoPosiçaoDestino(inicial, destino);
 		Peça capturadaPeça = fazerMovimento(inicial, destino);
+		
+		if (testCheck(jogadorAtual)) {
+			desfazerMovimento(inicial, destino, capturadaPeça);
+			throw new ExceçaoXadrez("Voce nao pode se por em CHECK");
+		}
+		
+		check =(testCheck(oponente(jogadorAtual))) ? true : false;
+		
 		novoTurno();
 		return (PeçaXadrez)capturadaPeça;
 	}
@@ -71,6 +85,17 @@ public class PartidaXadrez {
 		}
 		
 		return capturadaPeça;
+	}
+	
+	private void desfazerMovimento(Posiçao inicial, Posiçao destino, Peça capturadaPeça) {
+		Peça p = taboleiro.removePeça(destino);
+		taboleiro.lugarPeça(p, destino);
+		
+		if (capturadaPeça != null) {
+			taboleiro.lugarPeça(capturadaPeça, destino);
+			peçasCapturadas.remove(capturadaPeça);
+			peçasNoTaboleiro.add(capturadaPeça);
+		}
 	}
 	
 	private void validaçaoInicialPosiçao(Posiçao posiçao) {
@@ -94,6 +119,32 @@ public class PartidaXadrez {
 	private void novoTurno() {
 		turno++;
 		jogadorAtual = (jogadorAtual == Cor.BRANCO) ? Cor.PRETO : Cor.BRANCO;
+	}
+	
+	private Cor oponente(Cor cor) {
+		return (cor == Cor.BRANCO) ? Cor.PRETO : Cor.BRANCO;
+	}
+	
+	private PeçaXadrez rei(Cor cor) {
+		List<Peça> list = peçasNoTaboleiro.stream().filter(x -> ((PeçaXadrez)x).getCor() == cor).collect(Collectors.toList());
+		for (Peça p : list) {
+			if (p instanceof Rei) {
+				return (PeçaXadrez)p;
+			}
+		}
+		throw new IllegalStateException("Nao existe o Rei" + cor + "no tabuleiro");
+	}
+	
+	private boolean testCheck(Cor cor) {
+		Posiçao posiçaoRei = rei(cor).getPosiçaoXadrez().aPosiçao();
+		List<Peça> peçasOponentes = peçasNoTaboleiro.stream().filter(x -> ((PeçaXadrez)x).getCor() == oponente(cor)).collect(Collectors.toList());
+		for (Peça p : peçasOponentes) {
+			boolean[][] mat = p.movimentoPossiveis();
+			if (mat[posiçaoRei.getLinha()][posiçaoRei.getColuna()]) {
+				return true;				
+			}
+		}
+		return false;
 	}
 
 	private void lugarNovaPeça(char coluna, int linha, PeçaXadrez peça) {
