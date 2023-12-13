@@ -4,6 +4,10 @@ import taboleirojogo.Posiçao;
 import taboleirojogo.Taboleiro;
 import xadrez.peça.Rei;
 import xadrez.peça.Torre;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import taboleirojogo.Peça;
 
 public class PartidaXadrez {
@@ -11,6 +15,9 @@ public class PartidaXadrez {
 	private int turno;
 	private Cor jogadorAtual;
 	private Taboleiro taboleiro;
+	
+	private List<Peça> peçasNoTaboleiro = new ArrayList<>();
+	private List<Peça> peçasCapturadas = new ArrayList<>();
 	
 	public PartidaXadrez() {
 		taboleiro = new Taboleiro(8, 8);
@@ -57,6 +64,12 @@ public class PartidaXadrez {
 		Peça p = taboleiro.removePeça(inicial);
 		Peça capturadaPeça = taboleiro.removePeça(destino);
 		taboleiro.lugarPeça(p, destino);
+		
+		if (capturadaPeça != null) {
+			peçasNoTaboleiro.remove(capturadaPeça);
+			peçasCapturadas.add(capturadaPeça);
+		}
+		
 		return capturadaPeça;
 	}
 	
@@ -85,6 +98,7 @@ public class PartidaXadrez {
 
 	private void lugarNovaPeça(char coluna, int linha, PeçaXadrez peça) {
 		taboleiro.lugarPeça(peça, new PosiçaoXadrez(coluna, linha).aPosiçao());
+		peçasNoTaboleiro.add(peça);
 		
 	}
 
