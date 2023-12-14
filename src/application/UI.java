@@ -45,7 +45,7 @@ public class UI {
 			return new PosiçaoXadrez(coluna, linha);
 		}
 		catch (RuntimeException e) {
-			throw new InputMismatchException("Erro ao ler a posiçao do Xadrez, valores validos a1 ao h8");
+			throw new InputMismatchException("Erro ao ler a posicao do Xadrez, valores validos a1 ao h8");
 		}
 	}
 	

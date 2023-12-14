@@ -2,6 +2,10 @@ package xadrez;
 
 import taboleirojogo.Posiçao;
 import taboleirojogo.Taboleiro;
+import xadrez.peça.Bispo;
+import xadrez.peça.Cavalo;
+import xadrez.peça.Peao;
+import xadrez.peça.Queen;
 import xadrez.peça.Rei;
 import xadrez.peça.Torre;
 
@@ -113,19 +117,19 @@ public class PartidaXadrez {
 	
 	private void validaçaoInicialPosiçao(Posiçao posiçao) {
 		if(!taboleiro.haUmaPeça(posiçao)) {
-		throw new ExceçaoXadrez("Nao existe peça na posiçao inicial");
+		throw new ExceçaoXadrez("Nao existe peca na posiçao inicial");
 		}
 		if(jogadorAtual != ((PeçaXadrez)taboleiro.peça(posiçao)).getCor()) {
-			throw new ExceçaoXadrez("Essa peça nao e sua");
+			throw new ExceçaoXadrez("Essa peca nao e sua");
 		}
 		if(!taboleiro.peça(posiçao).aquiUmMovimentoPosivel()) {
-			throw new ExceçaoXadrez("Nao existe movimentos possiveis para esta peça");
+			throw new ExceçaoXadrez("Nao existe movimentos possiveis para esta peca");
 		}
 	}	
 	
 	private void validaçaoPosiçaoDestino(Posiçao inicial, Posiçao destino) {
 		if (!taboleiro.peça(inicial).movimentoPossivel(destino)) {
-			throw new ExceçaoXadrez("A peça escolhida nao pode mover para o destino escolhido");
+			throw new ExceçaoXadrez("A peca escolhida nao pode mover para o destino escolhido");
 		}
 	}
 	
@@ -192,13 +196,41 @@ public class PartidaXadrez {
 	}
 
 	private void setupInicial() {
-		lugarNovaPeça('h' , 7, new Torre(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('d' , 1, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('h' , 1, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('a' , 1, new Torre(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('b' , 1, new Cavalo(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('g' , 1, new Cavalo(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('c' , 1, new Bispo(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('f' , 1, new Bispo(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('d', 1, new Queen(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('e', 1, new Rei(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('a', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('b', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('c', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('d', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('e', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('f', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('g', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('h', 2, new Peao(taboleiro, Cor.BRANCO));
 		
 		
-		lugarNovaPeça('b' , 8, new Torre(taboleiro, Cor.PRETO));
-		lugarNovaPeça('a', 8, new Rei(taboleiro, Cor.PRETO));
+		
+		lugarNovaPeça('a' , 8, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('h' , 8, new Torre(taboleiro, Cor.PRETO));
+		lugarNovaPeça('b' , 8, new Cavalo(taboleiro, Cor.PRETO));
+		lugarNovaPeça('g' , 8, new Cavalo(taboleiro, Cor.PRETO));
+		lugarNovaPeça('c' , 8, new Bispo(taboleiro, Cor.PRETO));
+		lugarNovaPeça('f' , 8, new Bispo(taboleiro, Cor.PRETO));
+		lugarNovaPeça('d', 8, new Queen(taboleiro, Cor.PRETO));
+		lugarNovaPeça('e', 8, new Rei(taboleiro, Cor.PRETO));
+		lugarNovaPeça('a', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('b', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('c', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('d', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('e', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('f', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('g', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('h', 7, new Peao(taboleiro, Cor.PRETO));
 		
 	}
 	
