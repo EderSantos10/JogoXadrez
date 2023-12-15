@@ -40,6 +40,12 @@ public class Program {
 				if (capturadaPeça != null) {
 					capturada.add(capturadaPeça);
 				}
+				
+				if (partidaXadrez.getPromoçao() != null) {
+					System.out.print("Para qual peca voce ira promover (B / T / C / Q): ");
+					String type = sc.nextLine();
+					partidaXadrez.replacePromoçaoPeça(type);
+				}
 								
 			}
 		
