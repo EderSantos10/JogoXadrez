@@ -22,6 +22,7 @@ public class PartidaXadrez {
 	private Taboleiro taboleiro;
 	private boolean check;
 	private boolean checkMate;
+	private PeçaXadrez enPassantVuneravel;
 	
 	private List<Peça> peçasNoTaboleiro = new ArrayList<>();
 	private List<Peça> peçasCapturadas = new ArrayList<>();
@@ -47,6 +48,10 @@ public class PartidaXadrez {
 	
 	public boolean getCheckMate() {
 		return checkMate;
+	}
+	
+	public PeçaXadrez getEnPassantVuneravel() {
+		return enPassantVuneravel;
 	}
 	
 	public PeçaXadrez[][] getPeças(){
@@ -77,6 +82,8 @@ public class PartidaXadrez {
 			throw new ExceçaoXadrez("Voce nao pode se por em CHECK");
 		}
 		
+		PeçaXadrez moveuPeça = (PeçaXadrez)taboleiro.peça(destino);
+		
 		check =(testCheck(oponente(jogadorAtual))) ? true : false;
 		
 		if(testCheckMate(oponente(jogadorAtual))) {
@@ -85,6 +92,14 @@ public class PartidaXadrez {
 		else {
 			novoTurno();
 		}		
+		//#specialmove en passant
+		if(moveuPeça instanceof Peao && (destino.getLinha() == inicial.getLinha() - 2 || destino.getLinha() == inicial.getLinha() + 2)) {
+			enPassantVuneravel = moveuPeça;
+		}
+		else {
+			enPassantVuneravel = null;
+		}
+		
 		return (PeçaXadrez)capturadaPeça;
 	}
 	
@@ -114,6 +129,22 @@ public class PartidaXadrez {
 					PeçaXadrez torre = (PeçaXadrez)taboleiro.removePeça(iniT);
 					taboleiro.lugarPeça(torre, desT);
 					torre.acrescentaMovimentoContador();
+				}
+				
+		// #specialmove En Passant
+				if (p instanceof Peao) {
+					if (inicial.getColuna() != destino.getColuna() && capturadaPeça == null) {
+						Posiçao posiçaoPeao;
+						if (p.getCor() == Cor.BRANCO) {
+							posiçaoPeao = new Posiçao(destino.getLinha() + 1, destino.getColuna());
+						}
+						else {
+							posiçaoPeao = new Posiçao(destino.getLinha() - 1, destino.getColuna());
+						}
+						capturadaPeça = taboleiro.removePeça(posiçaoPeao);
+						peçasCapturadas.add(capturadaPeça);
+						peçasNoTaboleiro.remove(capturadaPeça);
+					}									
 				}
 		
 		return capturadaPeça;
@@ -145,6 +176,22 @@ public class PartidaXadrez {
 							PeçaXadrez torre = (PeçaXadrez)taboleiro.removePeça(desT);
 							taboleiro.lugarPeça(torre, iniT);
 							torre.decrescentaMovimentoContador();
+						}
+						
+						// #specialmove En Passant
+						if (p instanceof Peao) {
+							if (inicial.getColuna() != destino.getColuna() && capturadaPeça == enPassantVuneravel) {
+								PeçaXadrez peao = (PeçaXadrez)taboleiro.removePeça(destino);
+								Posiçao posiçaoPeao;
+								if (p.getCor() == Cor.BRANCO) {
+									posiçaoPeao = new Posiçao(3, destino.getColuna());
+								}
+								else {
+									posiçaoPeao = new Posiçao(4, destino.getColuna());
+								}
+								
+								taboleiro.lugarPeça(peao, posiçaoPeao);																
+							}									
 						}
 		
 	}
@@ -238,14 +285,14 @@ public class PartidaXadrez {
 		lugarNovaPeça('f' , 1, new Bispo(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('d', 1, new Queen(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('e', 1, new Rei(taboleiro, Cor.BRANCO, this));
-		lugarNovaPeça('a', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('b', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('c', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('d', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('e', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('f', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('g', 2, new Peao(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('h', 2, new Peao(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('a', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('b', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('c', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('d', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('e', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('f', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('g', 2, new Peao(taboleiro, Cor.BRANCO, this));
+		lugarNovaPeça('h', 2, new Peao(taboleiro, Cor.BRANCO, this));
 		
 		
 		
@@ -257,14 +304,14 @@ public class PartidaXadrez {
 		lugarNovaPeça('f' , 8, new Bispo(taboleiro, Cor.PRETO));
 		lugarNovaPeça('d', 8, new Queen(taboleiro, Cor.PRETO));
 		lugarNovaPeça('e', 8, new Rei(taboleiro, Cor.PRETO, this));
-		lugarNovaPeça('a', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('b', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('c', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('d', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('e', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('f', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('g', 7, new Peao(taboleiro, Cor.PRETO));
-		lugarNovaPeça('h', 7, new Peao(taboleiro, Cor.PRETO));
+		lugarNovaPeça('a', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('b', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('c', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('d', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('e', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('f', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('g', 7, new Peao(taboleiro, Cor.PRETO, this));
+		lugarNovaPeça('h', 7, new Peao(taboleiro, Cor.PRETO, this));
 		
 	}
 	

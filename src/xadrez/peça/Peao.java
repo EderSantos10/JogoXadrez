@@ -3,13 +3,16 @@ package xadrez.peça;
 import taboleirojogo.Posiçao;
 import taboleirojogo.Taboleiro;
 import xadrez.Cor;
+import xadrez.PartidaXadrez;
 import xadrez.PeçaXadrez;
 
 public class Peao extends PeçaXadrez{
-
-	public Peao(Taboleiro taboleiro, Cor cor) {
+	
+	private PartidaXadrez partidaXadrez;
+	
+	public Peao(Taboleiro taboleiro, Cor cor, PartidaXadrez partidaXadrez) {
 		super(taboleiro, cor);
-		
+		this.partidaXadrez = partidaXadrez;
 	}
 	
 	@Override
@@ -41,6 +44,18 @@ public class Peao extends PeçaXadrez{
 			if (getTaboleiro().posiçaoExistente(p) && eUmaPeçaOponente(p)) {
 				mat [p.getLinha()][p.getColuna()] = true;
 			}
+			
+			// #specialmove en passant white
+			if (posiçao.getLinha() == 3) {
+				Posiçao left = new Posiçao(posiçao.getLinha(), posiçao.getColuna() - 1);
+				if (getTaboleiro().posiçaoExistente(left) && eUmaPeçaOponente(left) && getTaboleiro().peça(left) == partidaXadrez.getEnPassantVuneravel()) {
+					mat[left.getLinha() - 1][left.getColuna()] = true;
+				}
+				Posiçao right = new Posiçao(posiçao.getLinha(), posiçao.getColuna() + 1);
+				if (getTaboleiro().posiçaoExistente(right) && eUmaPeçaOponente(right) && getTaboleiro().peça(right) == partidaXadrez.getEnPassantVuneravel()) {
+					mat[right.getLinha() - 1][right.getColuna()] = true;
+				}
+			}
 		}
 		else {
 			p.setValues(posiçao.getLinha() + 1, posiçao.getColuna());
@@ -60,7 +75,17 @@ public class Peao extends PeçaXadrez{
 			if (getTaboleiro().posiçaoExistente(p) && eUmaPeçaOponente(p)) {
 				mat [p.getLinha()][p.getColuna()] = true;
 			}
-			
+			// #specialmove en passant black
+			if (posiçao.getLinha() == 4) {
+				Posiçao left = new Posiçao(posiçao.getLinha(), posiçao.getColuna() - 1);
+				if (getTaboleiro().posiçaoExistente(left) && eUmaPeçaOponente(left) && getTaboleiro().peça(left) == partidaXadrez.getEnPassantVuneravel()) {
+					mat[left.getLinha() + 1][left.getColuna()] = true;
+				}
+				Posiçao right = new Posiçao(posiçao.getLinha(), posiçao.getColuna() + 1);
+				if (getTaboleiro().posiçaoExistente(right) && eUmaPeçaOponente(right) && getTaboleiro().peça(right) == partidaXadrez.getEnPassantVuneravel()) {
+					mat[right.getLinha() + 1][right.getColuna()] = true;
+				}
+			}			
 		}
 		
 		return mat;
