@@ -59,7 +59,7 @@ public class PartidaXadrez {
 		return mat;
 	}
 	
-	public boolean[][] movimentosPossiveis(PosiçaoXadrez posiçaoInicial){
+	public boolean[][] movimentoPossiveis(PosiçaoXadrez posiçaoInicial){
 		Posiçao posiçao = posiçaoInicial.aPosiçao();
 		validaçaoInicialPosiçao(posiçao);
 		return taboleiro.peça(posiçao).movimentoPossiveis();
@@ -84,8 +84,7 @@ public class PartidaXadrez {
 		}
 		else {
 			novoTurno();
-		}
-		
+		}		
 		return (PeçaXadrez)capturadaPeça;
 	}
 	
@@ -100,6 +99,23 @@ public class PartidaXadrez {
 			peçasCapturadas.add(capturadaPeça);
 		}
 		
+		// #Movimento especial Roque PE
+		if (p instanceof Rei && destino.getColuna() == inicial.getColuna() + 2) {
+			Posiçao iniT = new Posiçao(inicial.getLinha(), inicial.getColuna() + 3);
+			Posiçao desT = new Posiçao(inicial.getLinha(), inicial.getColuna() + 1);
+			PeçaXadrez torre = (PeçaXadrez)taboleiro.removePeça(iniT);
+			taboleiro.lugarPeça(torre, desT);
+			torre.acrescentaMovimentoContador();
+		}
+		// #Movimento especial Roque Grand
+				if (p instanceof Rei && destino.getColuna() == inicial.getColuna() - 2) {
+					Posiçao iniT = new Posiçao(inicial.getLinha(), inicial.getColuna() - 4);
+					Posiçao desT = new Posiçao(inicial.getLinha(), inicial.getColuna() - 1);
+					PeçaXadrez torre = (PeçaXadrez)taboleiro.removePeça(iniT);
+					taboleiro.lugarPeça(torre, desT);
+					torre.acrescentaMovimentoContador();
+				}
+		
 		return capturadaPeça;
 	}
 	
@@ -113,6 +129,24 @@ public class PartidaXadrez {
 			peçasCapturadas.remove(capturadaPeça);
 			peçasNoTaboleiro.add(capturadaPeça);
 		}
+		
+		// #Movimento especial Roque PE
+				if (p instanceof Rei && destino.getColuna() == inicial.getColuna() + 2) {
+					Posiçao iniT = new Posiçao(inicial.getLinha(), inicial.getColuna() + 3);
+					Posiçao desT = new Posiçao(inicial.getLinha(), inicial.getColuna() + 1);
+					PeçaXadrez torre = (PeçaXadrez)taboleiro.removePeça(desT);
+					taboleiro.lugarPeça(torre, iniT);
+					torre.decrescentaMovimentoContador();
+				}
+				// #Movimento especial Roque Grand
+						if (p instanceof Rei && destino.getColuna() == inicial.getColuna() - 2) {
+							Posiçao iniT = new Posiçao(inicial.getLinha(), inicial.getColuna() - 4);
+							Posiçao desT = new Posiçao(inicial.getLinha(), inicial.getColuna() - 1);
+							PeçaXadrez torre = (PeçaXadrez)taboleiro.removePeça(desT);
+							taboleiro.lugarPeça(torre, iniT);
+							torre.decrescentaMovimentoContador();
+						}
+		
 	}
 	
 	private void validaçaoInicialPosiçao(Posiçao posiçao) {
@@ -203,7 +237,7 @@ public class PartidaXadrez {
 		lugarNovaPeça('c' , 1, new Bispo(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('f' , 1, new Bispo(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('d', 1, new Queen(taboleiro, Cor.BRANCO));
-		lugarNovaPeça('e', 1, new Rei(taboleiro, Cor.BRANCO));
+		lugarNovaPeça('e', 1, new Rei(taboleiro, Cor.BRANCO, this));
 		lugarNovaPeça('a', 2, new Peao(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('b', 2, new Peao(taboleiro, Cor.BRANCO));
 		lugarNovaPeça('c', 2, new Peao(taboleiro, Cor.BRANCO));
@@ -222,7 +256,7 @@ public class PartidaXadrez {
 		lugarNovaPeça('c' , 8, new Bispo(taboleiro, Cor.PRETO));
 		lugarNovaPeça('f' , 8, new Bispo(taboleiro, Cor.PRETO));
 		lugarNovaPeça('d', 8, new Queen(taboleiro, Cor.PRETO));
-		lugarNovaPeça('e', 8, new Rei(taboleiro, Cor.PRETO));
+		lugarNovaPeça('e', 8, new Rei(taboleiro, Cor.PRETO, this));
 		lugarNovaPeça('a', 7, new Peao(taboleiro, Cor.PRETO));
 		lugarNovaPeça('b', 7, new Peao(taboleiro, Cor.PRETO));
 		lugarNovaPeça('c', 7, new Peao(taboleiro, Cor.PRETO));

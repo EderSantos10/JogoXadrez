@@ -27,7 +27,7 @@ public class Program {
 				System.out.print("Inicio: ");
 				PosiçaoXadrez inicial = UI.lerPosiçaoXadrez(sc);
 				
-				boolean[][] movimentoPossiveis = partidaXadrez.movimentosPossiveis(inicial);
+				boolean[][] movimentoPossiveis = partidaXadrez.movimentoPossiveis(inicial);
 				UI.limparTela();
 				UI.printTaboleiro(partidaXadrez.getPeças(), movimentoPossiveis);
 				
