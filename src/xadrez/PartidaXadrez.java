@@ -9,7 +9,6 @@ import xadrez.peça.Queen;
 import xadrez.peça.Rei;
 import xadrez.peça.Torre;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,7 +122,7 @@ public class PartidaXadrez {
 			throw new IllegalStateException("Nao ha peca para ser promovida.");
 		}
 		if (!type.equals("B") && !type.equals("T") && !type.equals("C") && !type.equals("Q")) {
-			throw new InvalidParameterException("A peca nao e valida para promocao.");
+			return promoçao;
 		}
 		
 		Posiçao pos = promoçao.getPosiçaoXadrez().aPosiçao();
